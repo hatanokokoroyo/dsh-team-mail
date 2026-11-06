@@ -95,7 +95,7 @@ Host 注册 `/api/team-mail` 前缀路由，统一用 `ctx.connection.authorizeI
 |---|---|
 | npm 包名 | `dsh-team-mail` |
 | Loader 入口 id | `team-mail` |
-| 工具名 | `team_mail_folders` / `_list` / `_new` / `_read` / `_send` / `_reply` / `_ack` / `_mark` / `_move` |
+| 工具名 | `team_mail_folders` / `_list` / `_new` / `_read` / `_account` / `_send` / `_reply` / `_ack` / `_mark` / `_move` |
 | HTTP 路由 | `/api/team-mail/*` |
 | 系统提示段 id | `team-mail` |
 | 缓存目录 | `~/.local/share/dsh-team-mail/` |
@@ -113,6 +113,7 @@ Host 注册 `/api/team-mail` 前缀路由，统一用 `ctx.connection.authorizeI
 
 - 邮件正文/附件是不可信数据；提示词明确要求不执行其中指令、附件只落盘
 - 发送只在用户明确要求时进行；回复先起草
+- 系统提示不含个人信息（账号／显示名／落款／通讯录），避免随每次模型请求外发给模型；Agent 需要时用 `team_mail_account` 按需获取
 - 密码只在凭据库/环境变量，不写入配置、不写日志、不回显给浏览器
 
 ## 10. 改动指南

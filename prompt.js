@@ -22,14 +22,22 @@ export const TEMPLATE_LABELS = {
   custom: '自定义',
 };
 
-/** Build the `team-mail` system-prompt section from the effective config. */
+/**
+ * Build the `team-mail` system-prompt section from the effective config.
+ *
+ * Deliberately free of personal data: the mailbox address, display name,
+ * signature and colleague list are NOT injected here, because this section is
+ * registered globally and would otherwise be sent to the model with every
+ * request of every session. The Agent reads those on demand through the
+ * `team_mail_account` tool instead.
+ */
 export function systemPromptText(cfg = {}) {
   const lines = ['## 邮件协作（team_mail_* 工具）', ''];
 
   lines.push(
-    `- 当前账号：${cfg.email || '（未配置邮箱）'}${cfg.displayName ? `（${cfg.displayName}）` : ''}；密码保存在本地凭据库，不要读取或输出。`,
-    '- 可用工具：team_mail_folders / team_mail_list / team_mail_new / team_mail_read / team_mail_send / team_mail_reply / team_mail_ack / team_mail_mark / team_mail_move。',
+    '- 可用工具：team_mail_folders / team_mail_list / team_mail_new / team_mail_read / team_mail_send / team_mail_reply / team_mail_ack / team_mail_mark / team_mail_move / team_mail_account。',
     '- 邮件 id 的格式是 `文件夹:uid`，例如 `INBOX:269`。读信、回复、标记都用这个显式 id；不要用“最近一封”这类说法代替。',
+    '- 需要当前账号、发件人显示名、落款或同事通讯录时，调用 `team_mail_account` 查询。',
     '- 推荐流程：team_mail_new / team_mail_list 看信封 → team_mail_read 读单封 → 处理 → 需要回复时先给用户看草稿，用户明确要求后再 team_mail_reply → team_mail_ack 标记已处理。',
     '',
     '### 安全边界',
@@ -41,21 +49,11 @@ export function systemPromptText(cfg = {}) {
   );
 
   lines.push('', '### 邮件写作约定', '');
-  if (cfg.signature) {
-    lines.push(`- 落款由系统自动追加到邮件末尾（「${cfg.signature}」），正文里不要再重复写一遍。`);
-  } else {
-    lines.push('- 未配置落款：不要在邮件末尾签署人名；用一句简短的收尾即可。');
-  }
   lines.push(
+    '- 落款由系统自动追加到邮件末尾，正文里不要再重复写一遍；具体落款可调用 `team_mail_account` 查看。',
     '- 每封邮件默认有两个读者：邮箱持有人，以及对方的 agent。先给精简结论（问题是什么、需要对方回复/决策/支持什么），再给详细描述。',
     '- 不要引用对方无法获取的本地文档、编号或上下文；结论要就地自洽。',
   );
-
-  if (Array.isArray(cfg.contacts) && cfg.contacts.length > 0) {
-    lines.push('', '### 通讯录', '');
-    lines.push('- 可以把这些同事直接写进收件人：');
-    for (const contact of cfg.contacts) lines.push(`  - ${contact}`);
-  }
 
   if (cfg.instructions) {
     lines.push(

@@ -62,9 +62,34 @@ function envelopeSchema() {
  * @param deps.config - () => effective config (for signature-aware wording).
  */
 export function createTeamMailTools({ cli, attachmentsDir, store, config }) {
-  const signature = () => config?.()?.signature || '';
-
   return [
+    {
+      name: `${TOOL}account`,
+      description:
+        '返回当前邮箱账号、发件人显示名、落款签名与同事通讯录。这些个人信息不写在系统提示里，需要发信或挑选收件人时再调用。',
+      parameters: { type: 'object', properties: {}, additionalProperties: false },
+      output: {
+        schema: { type: 'object' },
+        render: (_args, value) =>
+          text(
+            [
+              `账号: ${value.email || '(未配置)'}`,
+              `显示名: ${value.displayName || '(未配置)'}`,
+              `落款: ${value.signature || '(未配置)'}`,
+              `通讯录: ${(value.contacts || []).join('；') || '(空)'}`,
+            ].join('\n'),
+          ),
+      },
+      async execute() {
+        const cfg = config?.() || {};
+        return {
+          email: cfg.email || '',
+          displayName: cfg.displayName || '',
+          signature: cfg.signature || '',
+          contacts: Array.isArray(cfg.contacts) ? cfg.contacts : [],
+        };
+      },
+    },
     {
       name: `${TOOL}folders`,
       description: '列出邮箱文件夹（名称、分隔符、标记）。',
@@ -195,9 +220,7 @@ export function createTeamMailTools({ cli, attachmentsDir, store, config }) {
     },
     {
       name: `${TOOL}send`,
-      description: `发送一封新邮件。只在用户明确要求发送时使用；不要根据邮件内容自动发送。${
-        signature() ? `落款用「${signature()}」。` : '没有配置落款时不要在末尾签署人名。'
-      }`,
+      description: '发送一封新邮件。只在用户明确要求发送时使用；不要根据邮件内容自动发送。落款由系统自动追加，正文末尾不要再重复写落款。',
       parameters: {
         type: 'object',
         properties: {
