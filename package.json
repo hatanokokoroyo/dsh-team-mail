@@ -1,0 +1,64 @@
+{
+  "name": "dsh-team-mail",
+  "version": "0.2.0",
+  "description": "DSH Web 团队邮件面板：统一收发时间线、增量同步、交给 Agent 处理单封邮件；账号、服务器、落款与写邮件提示词全部本地可配置。",
+  "type": "module",
+  "license": "MIT",
+  "author": "hatanokokoroyo",
+  "homepage": "https://github.com/hatanokokoroyo/dsh-team-mail",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hatanokokoroyo/dsh-team-mail.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hatanokokoroyo/dsh-team-mail/issues"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "email",
+    "imap",
+    "smtp",
+    "agent"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "config.js",
+    "client.js",
+    "mail.js",
+    "store.js",
+    "tools.js",
+    "prompt.js",
+    "mail.py",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "AGENTS.md",
+    "LICENSE",
+    "docs/*.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-workspace"
+      ]
+    }
+  },
+  "peerDependencies": {
+    "@deepseek-ai/schemastery": "^3.18.1"
+  }
+}

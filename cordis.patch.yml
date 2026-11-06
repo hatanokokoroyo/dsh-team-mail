@@ -1,0 +1,6 @@
+# Loader rows this bundle contributes to the active profile. The row id is
+# unique to this plugin, so it cannot collide with another mail plugin's rows;
+# the panel writes its own settings as `config` under this same id.
+- insert:
+    - id: team-mail
+      name: dsh-team-mail

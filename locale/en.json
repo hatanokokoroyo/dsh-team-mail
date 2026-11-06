@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Team Mail",
+    "description": "Read incoming and sent mail in one timeline, sync new mail incrementally, and hand a single email to an Agent. Provides team_mail_* tools, with the account, servers, signature and mail-writing prompt all configurable locally."
+  }
+}

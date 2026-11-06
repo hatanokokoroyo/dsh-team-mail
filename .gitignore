@@ -1,0 +1,14 @@
+# Runtime and build artefacts
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+
+# Local configuration, credentials and caches must never enter the repository
+config.json
+*.local.json
+.env
+.env.*
+.credentials.yaml
+state.json
+*.log
